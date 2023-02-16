@@ -7,8 +7,11 @@ import java.io.IOException;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
+
+import com.eduardoProductos.projectjsf.dto.UsuarioDTO;
 
 /**
  * @author eduardoproductos
@@ -30,6 +33,22 @@ public class LoginController {
 	 */
 	private String password;
 	
+	
+	/*
+	 * Bean que mantiene la informacion en session
+	 */
+	@ManagedProperty("#{sessionController}") //para tener un controlador de JSF en otro controlador 
+	private SessionController sessionController;
+	
+	public SessionController getSessionController() {
+		return sessionController;
+	}
+
+	public void setSessionController(SessionController sessionController) {
+		this.sessionController = sessionController;
+	}
+
+
 	/*
 	 * Método que permite ingresar a la pantalla principal del proyecto
 	 */
@@ -39,6 +58,10 @@ public class LoginController {
 		if (usuario.equals("eduardo" ) && password.equals("12345")) {
 			
 			try {
+				UsuarioDTO usuarioDTO = new UsuarioDTO();
+				usuarioDTO.setUsuario(this.usuario);
+				usuarioDTO.setPassword(this.password);
+				this.sessionController.setUsuarioDTO(usuarioDTO);
 				this.redireccionar("principal.xhtml");
 			} catch (IOException e) {
 				FacesContext.getCurrentInstance().addMessage("formlogin:txtPassword",
